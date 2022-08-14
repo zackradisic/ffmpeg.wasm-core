@@ -14,29 +14,29 @@ run-all() {
   SCRIPTS=(
     # install dependencies
     install-deps
-    build-zlib
-    build-x264
-    build-x265
-    build-libvpx
-    build-wavpack
-    build-lame
-    build-fdk-aac
-    build-ogg
-    build-vorbis
-    build-theora
-    build-opus
-    build-libwebp
-    build-freetype2
-    build-fribidi
-    build-harfbuzz
-    build-libass
-    #build-aom # disabled as it is extremely slow
-    configure-ffmpeg
+		build-zlib
+		build-x264
+		build-x265
+		build-libvpx
+		build-wavpack
+		build-lame
+		build-fdk-aac
+		build-ogg
+		build-vorbis
+		build-theora
+		build-opus
+		build-libwebp
+		build-freetype2
+		build-fribidi
+		build-harfbuzz
+		build-libass
+		#build-aom # disabled as it is extremely slow
+		configure-ffmpeg
     build-ffmpeg
-    configure-ffmpeg.mp4-scale
-    build-ffmpeg.mp4-scale
-    configure-ffmpeg.png-to-mp4
-    build-ffmpeg.png-to-mp4
+    # configure-ffmpeg.mp4-scale
+    # build-ffmpeg.mp4-scale
+    # configure-ffmpeg.png-to-mp4
+    # build-ffmpeg.png-to-mp4
   )
   run ${SCRIPTS[@]}
 }
