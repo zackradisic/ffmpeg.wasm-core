@@ -4831,7 +4831,7 @@ static void init_variables() {
 }
 
 
-static only_parse int = 0;
+static int only_parse  = 0;
 
 void only_parse_opts(int enabled) {
     only_parse = enabled;
