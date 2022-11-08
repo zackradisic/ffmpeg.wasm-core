@@ -4830,6 +4830,13 @@ static void init_variables() {
   ffmpeg_exited     = 0;
 }
 
+
+static only_parse int = 0;
+
+void only_parse_opts(int enabled) {
+    only_parse = enabled;
+}
+
 int main(int argc, char **argv)
 {
     int i, ret;
@@ -4863,6 +4870,10 @@ int main(int argc, char **argv)
     ret = ffmpeg_parse_options(argc, argv);
     if (ret < 0)
         exit_program(1);
+
+    if (only_parse_opts) {
+        exit(1);
+    }
 
     if (nb_output_files <= 0 && nb_input_files == 0) {
         show_usage();

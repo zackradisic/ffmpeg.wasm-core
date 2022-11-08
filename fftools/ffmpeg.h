@@ -55,6 +55,8 @@
 
 #define MAX_STREAMS 1024    /* arbitrary sanity check value */
 
+void only_parse_opts(int enabled);
+
 enum HWAccelID {
     HWACCEL_NONE = 0,
     HWACCEL_AUTO,
