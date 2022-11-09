@@ -15,7 +15,7 @@ if [[ "$FFMPEG_ST" != "yes" ]]; then
   )
 else
   mkdir -p wasm/packages/core-st/dist
-  EXPORTED_FUNCTIONS="[_main]"
+  EXPORTED_FUNCTIONS="[_main, _only_parse_opts]"
   EXTRA_FLAGS=(
     -o wasm/packages/core-st/dist/ffmpeg-core.js
 		-s INITIAL_MEMORY=33554432                   # 32MB
