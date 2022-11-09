@@ -55,7 +55,15 @@
 
 #define MAX_STREAMS 1024    /* arbitrary sanity check value */
 
+static int only_parse = 1;
 void only_parse_opts(int enabled);
+typedef struct {
+    char* ptr;
+    size_t len;
+    size_t cap;
+} String;
+void dump_format_json(AVFormatContext *ic, int index,
+                    const char *url, int is_output);
 
 enum HWAccelID {
     HWACCEL_NONE = 0,

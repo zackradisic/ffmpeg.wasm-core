@@ -1248,7 +1248,11 @@ static int open_input_file(OptionsContext *o, const char *filename)
     add_input_streams(o, ic);
 
     /* dump the file content */
-    av_dump_format(ic, nb_input_files, filename, 0);
+    if (only_parse) {
+        dump_format_json(ic, nb_input_files, filename, 0);
+    } else {
+        av_dump_format(ic, nb_input_files, filename, 0);
+    }
 
     GROW_ARRAY(input_files, nb_input_files);
     f = av_mallocz(sizeof(*f));
@@ -2418,7 +2422,11 @@ loop_end:
 #endif
 
     if (!oc->nb_streams && !(oc->oformat->flags & AVFMT_NOSTREAMS)) {
-        av_dump_format(oc, nb_output_files - 1, oc->url, 1);
+        if (only_parse) {
+            dump_format_json(oc, nb_output_files - 1, oc->url, 1);
+        } else {
+            av_dump_format(oc, nb_output_files - 1, oc->url, 1);
+        }
         av_log(NULL, AV_LOG_ERROR, "Output file #%d does not contain any stream\n", nb_output_files - 1);
         exit_program(1);
     }
@@ -2762,6 +2770,9 @@ loop_end:
         }
     }
 
+    if (only_parse) {
+        dump_format_json(oc, 0, filename, 1);
+    }
     return 0;
 }
 
@@ -3774,3 +3785,75 @@ const OptionDef options[] = {
 
     { NULL, },
 };
+
+char* escape_string(char* str);
+void string_grow(String* string, size_t desired);
+void string_write_char(String* string, char c);
+
+void dump_format_json(AVFormatContext *ic, int index,
+                    const char *url, int is_output) {
+
+    printf("STREAM DUMP{\"kind\":\"%s\",", is_output ? "output" : "input");
+
+    printf("\"streams\": [");
+    for (int i = 0; i < ic->nb_streams; i++) {
+        AVStream* st = ic->streams[i];
+
+        switch (st->codecpar->codec_type) {
+            case AVMEDIA_TYPE_VIDEO:
+                printf("\"%s\"%s", "video", i == ic->nb_streams - 1 ? "" : ",");
+                break;
+            case AVMEDIA_TYPE_AUDIO:
+                printf("\"%s\"%s", "audio", i == ic->nb_streams - 1 ? "" : ",");
+                break;
+            default:
+                printf("\"%s\"%s", "unknown", i == ic->nb_streams - 1 ? "" : ",");
+                break;
+        }
+    }
+    printf("]");
+    printf("}END STREAM DUMP\n");
+}
+
+
+char* escape_string(char* str) {
+    size_t len = strlen(str);
+    String string = (String) { .ptr = (char*) malloc(len), .len = len, .cap = len };
+
+    for (size_t i = 0; i < len; i++) {
+        switch (str[i]) {
+            case '\n':
+            case '\"':
+            case '\\': 
+                string_write_char(&string, '\\');
+                string_write_char(&string, str[i]);
+            break;
+            default:
+                string_write_char(&string, str[i]);
+        }
+    }
+
+    char* ret = malloc(string.len + 1);
+    memcpy(ret, string.ptr, string.len);
+    free(string.ptr);
+    ret[string.len] = '\0';
+    return ret;
+}
+
+void string_grow(String* string, size_t desired) {
+    size_t new_cap = string->cap * 2;
+    if (desired > new_cap) {
+        new_cap = desired * 2;
+    }
+
+    string->ptr = realloc(string->ptr, new_cap);
+    string->cap = new_cap;
+}
+
+void string_write_char(String* string, char c) {
+    if (string->len + 1 > string->cap) {
+        string_grow(string, string->len + 1);
+    }
+
+    *(string->ptr + string->len++) = c;
+}

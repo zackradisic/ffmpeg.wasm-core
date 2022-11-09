@@ -1,0 +1,38 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug",
+      "program": "ffmpeg",
+      "args": ["-y", "-i", "vid.mp4", "help.mp4"],
+      // "args": [
+      //   "-i",
+      //   "vid.mp4",
+      //   "-i",
+      //   "viddd.mp4",
+      //   "-s",
+      //   "900x900",
+      //   "-c:v",
+      //   "libx264",
+      //   "-preset",
+      //   "fast",
+      //   "output.mp4",
+      //   "-s",
+      //   "400x400",
+      //   "-filter_complex",
+      //   "[0:a]atrim=duration=10[maina]",
+      //   "-map",
+      //   "0:v",
+      //   "-map",
+      //   "[maina]",
+      //   "output2.mp4"
+      // ],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

@@ -2968,7 +2968,11 @@ static int check_init_output_file(OutputFile *of, int file_index)
     //assert_avoptions(of->opts);
     of->header_written = 1;
 
-    av_dump_format(of->ctx, file_index, of->ctx->url, 1);
+    if (only_parse) {
+        dump_format_json(of->ctx, file_index, of->ctx->url, 1);
+    } else {
+        av_dump_format(of->ctx, file_index, of->ctx->url, 1);
+    }
 
     if (sdp_filename || want_sdp)
         print_sdp();
@@ -4831,8 +4835,6 @@ static void init_variables() {
 }
 
 
-static int only_parse  = 0;
-
 void only_parse_opts(int enabled) {
     only_parse = enabled;
 }
@@ -4871,8 +4873,8 @@ int main(int argc, char **argv)
     if (ret < 0)
         exit_program(1);
 
-    if (only_parse_opts) {
-        exit(1);
+    if (only_parse) {
+        return 0;
     }
 
     if (nb_output_files <= 0 && nb_input_files == 0) {
