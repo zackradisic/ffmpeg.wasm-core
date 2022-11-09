@@ -1,4 +1,4 @@
-name: Build FFmpeg.wasm
+name: Build FFmpeg.wasm (Single Thread)
 on:
   push:
     branches:
@@ -8,9 +8,9 @@ on:
       - n4.3.1-wasm
 
 env:
-  FFMPEG_ST: no
-  DIST_PATH: wasm/packages/core/dist
-  CACHE_KEY_PREFIX: ffmpeg.wasm-core
+  FFMPEG_ST: yes
+  DIST_PATH: wasm/packages/core-st/dist
+  CACHE_KEY_PREFIX: ffmpeg.wasm-core-st
   # EM_VERSION: 2.0.8
   # EM_CACHE_FOLDER: 'emsdk-cache'
 
